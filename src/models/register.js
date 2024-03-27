@@ -7,6 +7,7 @@ const xyzSchema = new mongoose.Schema({
     },
     email:{
         type:String,
+        unique:true,
         required:true
     },
     number:{
@@ -20,6 +21,6 @@ const xyzSchema = new mongoose.Schema({
 })
 
 //Now we need to create our collection by using the schema 
-const Register = new mongoose.model("Register1",xyzSchema)
+const Register = new mongoose.model("Register2",xyzSchema)
 
 module.exports=Register
