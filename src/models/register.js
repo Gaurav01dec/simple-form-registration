@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const bcrypt = require("bcrypt")
 
 const xyzSchema = new mongoose.Schema({
     name:{
@@ -18,6 +19,13 @@ const xyzSchema = new mongoose.Schema({
         type:String,
         required:true   
     }
+})
+
+xyzSchema.pre("save",async function(next){
+    console.log(`the current password is ${this.password}`);
+    this.password = await bcrypt.hash(this.password,4)
+    console.log(`the current password is ${this.password}`);
+    next();
 })
 
 //Now we need to create our collection by using the schema 

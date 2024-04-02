@@ -2,6 +2,17 @@ const express = require("express");
 const path = require("path");
 const hbs = require("hbs");//handlebars
 const Register = require("./models/register");
+const bcrypt = require("bcrypt")
+
+// const securePassword = async(password) =>{
+//     const passHash = await bcrypt.hash(password,12)//12 stands for 12 rounds 
+//     console.log(passHash);
+// }
+// securePassword("gaurav");
+
+
+
+
 require("./db/conn");
 
 const app = express();
@@ -25,12 +36,14 @@ app.get("/", (req, res) => {
 })
 app.post("/register", async (req, res) => {
     try {
+        
         const registerEmployee = new Register({
             name: req.body.name,
             email: req.body.email,
             number: req.body.number,
             password: req.body.password,
         })
+        // add middle ware in schema
         registerEmployee.save();
         res.render("index.hbs")
     } catch (error) {
@@ -48,8 +61,12 @@ app.post("/login", async (req, res) => {
         nameinDatabase = await resultdata[0].name
 
         passwordByUser = await req.body.password
+//matching password
+        const ismatch = bcrypt.compare(passwordByUser,resultdata[0].password)
+        console.log(ismatch);
 
-        if (passwordByUser == resultdata[0].password) {
+        if (ismatch) {
+        // if (passwordByUser == resultdata[0].password) {
 
             res.send(`${nameinDatabase} ...Login Success`)
         }else{
