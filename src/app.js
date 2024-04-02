@@ -2,7 +2,8 @@ const express = require("express");
 const path = require("path");
 const hbs = require("hbs");//handlebars
 const Register = require("./models/register");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // const securePassword = async(password) =>{
 //     const passHash = await bcrypt.hash(password,12)//12 stands for 12 rounds 
@@ -43,7 +44,12 @@ app.post("/register", async (req, res) => {
             number: req.body.number,
             password: req.body.password,
         })
-        // add middle ware in schema
+        // add middle ware in schema for password hashing , done in register.js
+        
+        //add middleware to generate token
+        const token = await registerEmployee.generateAuthToken();
+        console.log("from app.js : token value : "+token);
+
         registerEmployee.save();
         res.render("index.hbs")
     } catch (error) {
