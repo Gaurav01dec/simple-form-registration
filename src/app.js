@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 })
 app.post("/register", async (req, res) => {
     try {
-        
+
         const registerEmployee = new Register({
             name: req.body.name,
             email: req.body.email,
@@ -45,10 +45,18 @@ app.post("/register", async (req, res) => {
             password: req.body.password,
         })
         // add middle ware in schema for password hashing , done in register.js
-        
+
         //add middleware to generate token
         const token = await registerEmployee.generateAuthToken();
-        console.log("from app.js : token value : "+token);
+        // console.log("from app.js : token value : "+token);
+
+        //adding sample cookie to the page
+        // res.cookie("jwt", token);
+        // res.cookie("jwt",token,{
+        //     expires: new Date(Date.now()+10000),
+        //     httpOnly:true
+        // });
+        // console.log(cookie);
 
         registerEmployee.save();
         res.render("index.hbs")
@@ -60,23 +68,31 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     const resultdata = await Register.find({ email: req.body.email })
 
+    //GENERATING TOKEN
+    // const token = await resultdata.generateAuthToken()
+    // console.log("token value for login is : "+token);
+
     if (resultdata.length == 0) {
         res.send(`No record found ...Login Failed`)
 
-    } else{
+    } else {
         nameinDatabase = await resultdata[0].name
 
         passwordByUser = await req.body.password
-//matching password
-        const ismatch = bcrypt.compare(passwordByUser,resultdata[0].password)
-        console.log(ismatch);
+        console.log(passwordByUser);
+        //matching password
+        console.log(resultdata[0].password);
+        // const ismatch = await bcrypt.compare(passwordByUser, resultdata[0].password)
+        // const ismatch = await bcrypt.compare(passwordByUser, resultdata[0].password)
+        console.log("i am running here");
+        // console.log(ismatch);
 
-        if (ismatch) {
-        // if (passwordByUser == resultdata[0].password) {
+        // if (ismatch) {
+        if (passwordByUser == resultdata[0].password) {
 
             res.send(`${nameinDatabase} ...Login Success`)
-        }else{
-            res.send(`Wrong Password ...Login Failed`)
+        } else {
+            res.send(`wrong password...`)
         }
     }
     // console.log(req.body.email);

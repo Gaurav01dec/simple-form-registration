@@ -31,7 +31,7 @@ const xyzSchema = new mongoose.Schema({
 //middleware to generate JWT json web token
 xyzSchema.methods.generateAuthToken = async function(){
     try {
-        console.log(this._id);
+        // console.log(this._id);
         const token = jwt.sign({_id:this._id.toString()},"mynameisgauravvermafromsgtuniversity");
         this.tokens =  this.tokens.concat({token:token});
         await this.save()
@@ -44,9 +44,9 @@ xyzSchema.methods.generateAuthToken = async function(){
 
 // middle wware to generate hash password
 xyzSchema.pre("save", async function (next) {
-    console.log(`the current password is ${this.password}`);
-    this.password = await bcrypt.hash(this.password, 4)
-    console.log(`the current password is ${this.password}`);
+    // console.log(`the current password is ${this.password}`);
+    // this.password = await bcrypt.hash(this.password, 4)
+    // console.log(`the current password is ${this.password}`);
     next();
 })
 
